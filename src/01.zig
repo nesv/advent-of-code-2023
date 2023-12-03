@@ -4,23 +4,10 @@ const mem = std.mem;
 const aoc = @import("root.zig");
 
 pub fn main() !void {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    defer {
-        const result = gpa.deinit();
-        if (result == .leak) std.testing.expect(false) catch @panic("LEAK DETECTED");
-    }
-    const alloc = gpa.allocator();
-
-    // Input for part 1.
-    var part1 = std.ArrayList(u8).init(alloc);
-    defer part1.deinit();
-
-    // Input for part 2.
-    var part2 = std.ArrayList(u8).init(alloc);
-    defer part2.deinit();
-
     // Read from STDIN.
     const stdin = std.io.getStdIn().reader();
+    var p1sum: isize = 0;
+    var p2sum: isize = 0;
     var buffer: [1024]u8 = undefined;
     while (try aoc.readLine(stdin, &buffer)) |line| {
         // Part 1.
@@ -28,7 +15,7 @@ pub fn main() !void {
             const first = try fmt.charToDigit(firstDigitChar(line), 10);
             const last = try fmt.charToDigit(lastDigitChar(line), 10);
             const n = (first * 10) + last;
-            try part1.append(n);
+            p1sum += n;
         }
 
         // Part 2.
@@ -36,14 +23,9 @@ pub fn main() !void {
             const first = firstDigit(line);
             const last = lastDigit(line);
             const n = (first * 10) + last;
-            try part2.append(n);
+            p2sum += n;
         }
     }
-
-    // Part 1 and part 2 involve summing all of the collected values together.
-    // The only difference is in how each line of input is parsed.
-    const p1sum = aoc.sum(u8, part1.items);
-    const p2sum = aoc.sum(u8, part2.items);
     std.debug.print("{d}\n{d}\n", .{ p1sum, p2sum });
 }
 
