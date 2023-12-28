@@ -13,7 +13,7 @@ pub fn main() !void {
     var buffer: [1024]u8 = undefined;
     var i: usize = 0;
     while (try aoc.readLine(stdin, &buffer)) |line| {
-        std.mem.copy(u8, &schematic[i], line[0..]);
+        std.mem.copyForwards(u8, &schematic[i], line[0..]);
         i += 1;
     }
 
